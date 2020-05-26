@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "../types";
+import { Color } from "~/globals";
+
 
 class BootcampsController {
 

@@ -25,7 +25,9 @@
     "typescript": "^3.9.3"
   },
   "devDependencies": {
+    "@types/morgan": "^1.9.0",
     "link-module-alias": "^1.2.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "tsc-watch": "^4.2.8"
   },
