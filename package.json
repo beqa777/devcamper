@@ -20,8 +20,10 @@
   "homepage": "https://github.com/beqa777/devcamper#readme",
   "dependencies": {
     "@types/express": "^4.17.6",
+    "@types/mongoose": "^5.7.21",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mongoose": "^5.9.16",
     "typescript": "^3.9.3"
   },
   "devDependencies": {

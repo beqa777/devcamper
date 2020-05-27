@@ -1,32 +1,71 @@
 import { NextFunction, Request, Response } from "../types";
-import { Color } from "~/globals";
+import BootcampModel from '~/models/Bootcamp';
 
 
 class BootcampsController {
 
     /** get data */
-    all(req: Request, res: Response, next: NextFunction) {
-        res.status(200).json({ success: true, msg: 'show all bootcamps' });
+    async all(req: Request, res: Response, next: NextFunction) {
+        try {
+            const bootcamps = await BootcampModel.find();
+            res.status(200).json({ success: true, count: bootcamps.length, data: bootcamps });
+        } catch (error) {
+            res.status(400).json({ success: false, msg: error.message });
+        }
     }
 
     /** get by id */
-    get(req: Request, res: Response, next: NextFunction) {
-        res.status(200).json({ success: true, msg: 'get specific bootcamps' });
+    async get(req: Request, res: Response, next: NextFunction) {
+        try {
+            const bootcamp = await BootcampModel.findById(req.params.id);
+            if (!bootcamp) {
+                throw new Error('Incorrect id')
+            }
+            res.status(200).json({ success: true, data: bootcamp });
+        } catch (error) {
+            res.status(400).json({ success: false, msg: error.message });
+        }
     }
 
     /** create record */
-    post(req: Request, res: Response, next: NextFunction) {
-        res.status(200).json({ success: true, msg: 'create create bootcamp' });
+    async post(req: Request, res: Response, next: NextFunction) {
+        try {
+            const bootcamp = await BootcampModel.create(req.body);
+            res.status(201).json({ success: true, data: bootcamp });
+        } catch (error) {
+            res.status(400).json({ success: false, msg: error.message });
+        }
     }
 
     /** edit record */
-    put(req: Request, res: Response, next: NextFunction) {
-        res.status(200).json({ success: true, msg: 'update specific bootcamps' });
+    async put(req: Request, res: Response, next: NextFunction) {
+        try {
+            const bootcamp = await BootcampModel.findByIdAndUpdate(req.params.id, req.body, {
+                new: true,
+                runValidators: true
+            });
+
+            if (!bootcamp) {
+                throw new Error('Bad request')
+            }
+            res.status(200).json({ success: true, data: bootcamp });
+
+        } catch (error) {
+            res.status(400).json({ success: false, msg: error.message });
+        }
     }
 
     /** delete record */
-    delete(req: Request, res: Response, next: NextFunction) {
-        res.status(200).json({ success: true, msg: 'delete specific bootcamps' });
+    async delete(req: Request, res: Response, next: NextFunction) {
+        try {
+            const bootcamp = await BootcampModel.findByIdAndDelete(req.params.id);
+            if (!bootcamp) {
+                throw new Error('Incorrect id')
+            }
+            res.status(200).json({ success: true, msg: 'bootcamp deleted successfully' });
+        } catch (error) {
+            res.status(400).json({ success: false, msg: error.message });
+        }
     }
 
 }
