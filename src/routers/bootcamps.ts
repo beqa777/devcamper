@@ -17,4 +17,6 @@ router.put(`/:id`, asyncHandler(controller.put));
 
 router.delete(`/:id`, asyncHandler(controller.delete));
 
+router.get(`/radius/:zipcode/:distance`, asyncHandler(controller.getBootcampInRadius));
+
 export default router;

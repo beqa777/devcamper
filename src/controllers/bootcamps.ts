@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "../types";
+import { geocoder } from '~/utils/geocoder';
 import BootcampModel from '~/models/Bootcamp';
 import { ErrorResponse } from "~/utils/errorResponse";
 
@@ -49,6 +50,31 @@ class BootcampsController {
             return next(new ErrorResponse(`Bootcamp not found with id ${id}`, 404));
         }
         res.status(200).json({ success: true, msg: 'bootcamp deleted successfully' });
+    }
+
+    /** get bootcamp witch certain radius*/
+    async getBootcampInRadius(req: Request, res: Response, next: NextFunction) {
+        const { zipcode, distance } = req.params;
+
+        // get lan/lon from geocoder
+        const loc = await geocoder.geocode(zipcode);
+        const info = loc[0];
+        const { latitude, longitude } = info;
+
+
+        // Calc radius using radians
+        // Divide distance by radius of earth
+        // Earth radius = 3,958 mil
+        const radius = parseInt(distance) / 3958;
+        const bootcamps = await BootcampModel.find({
+            location: { $geoWithin: { $centerSphere: [[longitude, latitude], radius] } }
+        });
+
+        res.status(200).json({
+            success: true,
+            count: bootcamps.length,
+            data: bootcamps
+        });
     }
 
 }
