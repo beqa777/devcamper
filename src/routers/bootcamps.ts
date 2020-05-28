@@ -1,18 +1,20 @@
 import express from 'express';
 import BootcampsController from '~/controllers/bootcamps';
+import { asyncHandler } from '~/middlewares/async';
+
 
 const router = express.Router();
 const controller = new BootcampsController();
 
 
-router.get('/', controller.all);
+router.get('/', asyncHandler(controller.all));
 
-router.post('/', controller.post);
+router.post('/', asyncHandler(controller.post));
 
-router.get(`/:id`, controller.get)
+router.get(`/:id`, asyncHandler(controller.get))
 
-router.put(`/:id`, controller.put)
+router.put(`/:id`, asyncHandler(controller.put));
 
-router.delete(`/:id`, controller.delete)
+router.delete(`/:id`, asyncHandler(controller.delete));
 
 export default router;

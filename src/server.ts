@@ -4,6 +4,7 @@ import bootcamps from './routers/bootcamps';
 import { api, Color } from './globals';
 import morgan from 'morgan';
 import { connectDb } from '~/db';
+import { errorHandler } from '~/middlewares/errorHandler';
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -25,9 +26,12 @@ app.use(express.json());
 //routes
 app.use(`${api}/bootcamps`, bootcamps);
 
+//error handler
+app.use(errorHandler);
+
 //start server
 const server = app.listen(PORT, () => {
-    console.log(Color.FgBlue,`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+    console.log(Color.FgBlue, `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 });
 
 
