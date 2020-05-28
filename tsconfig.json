@@ -65,7 +65,7 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.d.ts"
+    "./src/**/*.d.ts", "seeder.ts"
   ],
   "lib": [
     "es2015"

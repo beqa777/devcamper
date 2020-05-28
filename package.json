@@ -6,7 +6,9 @@
   "scripts": {
     "start": " SET NODE_ENV=production & node ./dist/server.js",
     "dev": "tsc-watch --project . --outDir ./dist --onSuccess \"nodemon ./dist/server.js\"",
-    "preinstall": "link-module-alias"
+    "preinstall": "link-module-alias",
+    "import-data": "node seeder -i",
+    "delete-data": "node seeder -d"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,7 @@ interface BootcampType extends Document {
     website: string,
     phone: Number,
     email: string,
-    address: string,
+    address?: string,
     location: {
         type: string,
         coordinates: any[],
@@ -139,7 +139,7 @@ BootcampSchema.pre<BootcampType>('save', function (next) {
 
 // Geocode & create location field
 BootcampSchema.pre<BootcampType>('save', async function (next) {
-    const loc = await geocoder.geocode(this.address);
+    const loc = await geocoder.geocode(''+this.address);
     const info = loc[0];
     
     this.location = {
@@ -152,7 +152,7 @@ BootcampSchema.pre<BootcampType>('save', async function (next) {
         zipcode: info.zipcode,
         country: info.countryCode
     }
-    this.address = '';
+    this.address = undefined;
     next();
 });
 
