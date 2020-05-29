@@ -1,15 +1,27 @@
-import { NextFunction, Request, Response } from "../types";
-import { geocoder } from '~/utils/geocoder';
 import BootcampModel from '~/models/Bootcamp';
 import { ErrorResponse } from "~/utils/errorResponse";
+import { geocoder } from '~/utils/geocoder';
+import { paginate, queryGenerator } from "~/utils/query";
+import { NextFunction, Request, Response } from "../types";
+
 
 
 class BootcampsController {
 
     /** get data */
     async all(req: Request, res: Response, next: NextFunction) {
-        const bootcamps = await BootcampModel.find();
-        res.status(200).json({ success: true, count: bootcamps.length, data: bootcamps });
+        const query = queryGenerator({ req, model: BootcampModel });
+
+        const result = await paginate({
+            req,
+            query,
+            model: BootcampModel
+        });
+
+        res.status(200).json({
+            success: true,
+            ...result
+        });
     }
 
     /** get by id */
