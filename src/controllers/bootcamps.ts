@@ -3,7 +3,8 @@ import { ErrorResponse } from "~/utils/errorResponse";
 import { geocoder } from '~/utils/geocoder';
 import { paginate, queryGenerator, relationsGenerator } from "~/utils/query";
 import { NextFunction, Request, Response } from "../types";
-
+import path from 'path';
+import fileUpload from 'express-fileupload';
 
 
 class BootcampsController {
@@ -89,6 +90,57 @@ class BootcampsController {
             count: bootcamps.length,
             data: bootcamps
         });
+    }
+
+    async bootcampPhotoUpload(req: Request, res: Response, next: NextFunction) {
+        const id = req.params.id;
+        const bootcamp = await BootcampModel.findById(id);
+        if (!bootcamp) {
+            return next(new ErrorResponse(`Bootcamp not found with id ${id}`, 404));
+        }
+
+        if (!req.files) {
+            return next(new ErrorResponse(`Please upload file`, 400));
+        }
+
+        let file: fileUpload.UploadedFile;
+
+        if (Array.isArray(req.files.file)) {
+            file = req.files.file[0];
+        } else {
+            file = req.files.file;
+        }
+
+        file = Array.isArray(file) ? file[0] : file
+
+        // Make sure the image is photo
+
+        if (!file.mimetype.startsWith('image')) {
+            return next(new ErrorResponse(`Please choice image`, 400));
+        }
+
+        let maxFileSize = process.env.MAX_FILE_UPLOAD ? `${process.env.MAX_FILE_UPLOAD}` : '1000000';
+
+        if (file.size > parseInt(maxFileSize)) {
+            return next(new ErrorResponse(`Please upload image lest than ${process.env.MAX_FILE_UPLOAD} byte`, 400));
+        }
+
+        // Create custom filename
+        file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`
+
+        file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+            if (err) {
+                console.log(err);
+                return next(new ErrorResponse(`Problem with file upload`, 500));
+            }
+            await BootcampModel.findByIdAndUpdate(req.params.id, { photo: file.name })
+        })
+
+        res.status(200).json({
+            success: true,
+            data: file.name
+        })
+
     }
 
 }

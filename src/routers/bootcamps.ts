@@ -23,4 +23,7 @@ router.delete(`/:id`, asyncHandler(controller.delete));
 
 router.get(`/radius/:zipcode/:distance`, asyncHandler(controller.getBootcampInRadius));
 
+router.put(`/:id/photo`, asyncHandler(controller.bootcampPhotoUpload));
+
+
 export default router;

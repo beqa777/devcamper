@@ -4,6 +4,9 @@ import { api, Color } from './globals';
 import morgan from 'morgan';
 import { connectDb } from '~/db';
 import { errorHandler } from '~/middlewares/errorHandler';
+import fileupload from 'express-fileupload';
+import path from 'path';
+
 
 // import routes
 import bootcamps from './routers/bootcamps';
@@ -23,6 +26,15 @@ const app: Express = express();
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+
+// File upload
+app.use(fileupload());
+
+// Set static folder
+// console.log(Color.FgRed, path.resolve() + "/public");
+
+app.use(express.static(path.resolve() + "/public"));
+
 
 //body parser
 app.use(express.json());
