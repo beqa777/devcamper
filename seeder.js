@@ -39,12 +39,15 @@ const importData = async () => {
 }
 
 // delete data in database
-const deleteData = async () => {
+const deleteData = async (fn) => {
     try {
         await Bootcamp.deleteMany({});
         await Course.deleteMany({});
-        console.log(Color.FgGreen, 'Courses deleted.');
         console.log(Color.FgGreen, 'Bootcamps deleted.');
+        console.log(Color.FgGreen, 'Courses deleted.');
+        if(fn){
+            await fn()
+        }
     } catch (error) {
         console.log(Color.FgRed, error);
     } finally {
@@ -56,7 +59,10 @@ if (process.argv[2] === '-i') {
     importData();
 } else if (process.argv[2] === '-d') {
     deleteData();
-} else {
+} else if (process.argv[2] === '-r') {
+    deleteData(importData);
+}
+else {
     console.log(Color.FgRed, 'Argument not passed');
     process.exit();
 }

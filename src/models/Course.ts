@@ -1,5 +1,6 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import { ObjectID } from 'mongodb';
+import { Color } from '~/globals';
 
 interface CourseType extends Document {
     title: string,
@@ -14,6 +15,7 @@ interface CourseType extends Document {
 const CourseSchema = new Schema<CourseType>({
     title: {
         type: String,
+        unique: true,
         trim: true,
         required: [true, 'Please add course title']
     },
@@ -52,5 +54,49 @@ const CourseSchema = new Schema<CourseType>({
         required: true
     }
 });
+
+
+// Static method to get avg od tuitions
+CourseSchema.static('getAverageCost', async function (this: Model<Document, {}>, bootcampId: string) {
+    const obj = await this.aggregate([
+        {
+            $match: { bootcamp: bootcampId }
+        },
+        {
+            $group: {
+                _id: '$bootcamp',
+                averageCost: { $avg: '$tuition' }
+            }
+        }
+    ]);
+
+    try {
+
+        if (obj[0]) {
+            await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
+                averageCost: Math.ceil(obj[0].averageCost / 10) * 10
+            })
+        } else {
+            await this.model('Bootcamp').updateOne(
+                { _id: bootcampId },
+                { $unset: { averageCost: '' } }
+            );
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+});
+
+// Call getAverageCost after save
+CourseSchema.post<Document>('save', async function (this: any) {
+    await this.constructor.getAverageCost(this.bootcamp)
+})
+
+
+// Call getAverageCost before save
+CourseSchema.post('remove', async function (this: any) {
+    await this.constructor.getAverageCost(this.bootcamp);
+})
 
 export default mongoose.model('Course', CourseSchema)

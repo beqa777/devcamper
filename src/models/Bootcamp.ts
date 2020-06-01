@@ -127,6 +127,10 @@ const BootcampSchema: Schema<BootcampType> = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    toJSON: { virtuals: true, },
+    id: false,
+    toObject: { virtuals: true }
 });
 
 type BootcampSchemaType = typeof BootcampSchema;
@@ -139,9 +143,9 @@ BootcampSchema.pre<BootcampType>('save', function (next) {
 
 // Geocode & create location field
 BootcampSchema.pre<BootcampType>('save', async function (next) {
-    const loc = await geocoder.geocode(''+this.address);
+    const loc = await geocoder.geocode('' + this.address);
     const info = loc[0];
-    
+
     this.location = {
         type: 'Point',
         coordinates: [info.longitude, info.latitude],
@@ -155,5 +159,19 @@ BootcampSchema.pre<BootcampType>('save', async function (next) {
     this.address = undefined;
     next();
 });
+
+// Cascade delete courses when a bootcamp is deleted
+BootcampSchema.pre<BootcampType>('remove', async function (next) {
+    await this.model('Course').deleteMany({ bootcamp: this._id });
+    next();
+})
+
+// Reverse populate with virtuals
+BootcampSchema.virtual('courses', {
+    ref: 'Course',
+    localField: '_id',
+    foreignField: 'bootcamp',
+    justOne: false
+})
 
 export default mongoose.model('Bootcamp', BootcampSchema);

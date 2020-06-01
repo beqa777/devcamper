@@ -1,6 +1,7 @@
 import CourseModel from '~/models/Course';
+import BootcampModel from '~/models/Bootcamp';
 import { ErrorResponse } from "~/utils/errorResponse";
-import { paginate, queryGenerator } from "~/utils/query";
+import { paginate, queryGenerator, relationsGenerator } from "~/utils/query";
 import { NextFunction, Request, Response } from "../types";
 
 
@@ -16,8 +17,8 @@ class CourseController {
      * @param next 
      */
     async getCourses(req: Request, res: Response, next: NextFunction) {
+        let query = queryGenerator({ req, model: CourseModel });
 
-        const query = queryGenerator({ req, model: CourseModel });
         if (req.params.bootcampId) {
             query.find({ bootcamp: req.params.bootcampId });
         }
@@ -31,38 +32,16 @@ class CourseController {
             success: true,
             ...result
         });
-
-
-        // if (req.params.bootcampId) {
-        //     const query = CourseModel.find({ bootcamp: req.params.bootcampId });
-        //     const courses = await query;
-        //     res.status(200).json({
-        //         success: true,
-        //         data: courses
-        //     });
-
-        // } else {
-        //     const query = queryGenerator({ req, model: CourseModel });
-        //     const result = await paginate({
-        //         req,
-        //         query,
-        //         model: CourseModel
-        //     });
-
-        //     res.status(200).json({
-        //         success: true,
-        //         ...result
-        //     });
-        // }
     }
-
-
 
 
     /** get by id */
     async get(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id;
-        const course = await CourseModel.findById(id);
+        let query = CourseModel.find({ _id: id });
+        query = relationsGenerator({ req, query });
+        const course = await query;
+
         if (!course) {
             return next(new ErrorResponse(`Course not found with id ${id}`, 404));
         }
@@ -71,6 +50,11 @@ class CourseController {
 
     /** create record */
     async post(req: Request, res: Response, next: NextFunction) {
+        const bootcamp = await BootcampModel.findById(req.body.bootcamp);
+        if (!bootcamp) {
+            return next(new ErrorResponse(`Bootcamp not found with id ${bootcamp}`, 404));
+        }
+
         const course = await CourseModel.create(req.body);
         res.status(201).json({ success: true, data: course });
     }
@@ -78,6 +62,14 @@ class CourseController {
     /** edit record */
     async put(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id;
+
+        if (req.body.bootcamp) {
+            const bootcamp = await BootcampModel.findById(req.body.bootcamp);
+            if (!bootcamp) {
+                return next(new ErrorResponse(`Bootcamp not found with id ${bootcamp}`, 404));
+            }
+        }
+
         const course = await CourseModel.findByIdAndUpdate(id, req.body, {
             new: true,
             runValidators: true
@@ -92,10 +84,11 @@ class CourseController {
     /** delete record */
     async delete(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id;
-        const course = await CourseModel.findByIdAndDelete(id);
+        const course = await CourseModel.findById(id);
         if (!course) {
             return next(new ErrorResponse(`course not found with id ${id}`, 404));
         }
+        course.remove();
         res.status(200).json({ success: true, msg: 'Course deleted successfully' });
     }
 

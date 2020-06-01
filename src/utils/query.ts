@@ -1,5 +1,6 @@
 import { Request } from "~/types";
 import { Model, DocumentQuery } from "mongoose";
+import { Color } from "~/globals";
 
 type QueryGeneratorParams = {
     req: Request,
@@ -17,7 +18,7 @@ export const queryGenerator = (args: QueryGeneratorParams) => {
     const reqQuery = { ...req.query };
 
     // Field to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit'];
+    const removeFields = ['select', 'sort', 'page', 'limit', 'relations'];
 
     //Loop over remove fields and delete from query
     removeFields.forEach(field => delete reqQuery[field]);
@@ -27,6 +28,8 @@ export const queryGenerator = (args: QueryGeneratorParams) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
     let query = model.find(JSON.parse(queryStr));
+
+    query = relationsGenerator({ query, req });
 
     //Select Fields
     if (req.query.select) {
@@ -101,4 +104,25 @@ export const paginate = async (args: PaginationGeneratorParams) => {
         }
     };
 
+}
+
+type PopulateGeneratorType = {
+    req: Request,
+    query: DocumentQuery<any[], any, {}>,
+}
+type PopulateFieldsType = Array<{ path: string, select: string }>;
+export const relationsGenerator = (args: PopulateGeneratorType) => {
+    let { query, req } = args;
+    if (req.query.relations) {
+        const populate = req.query.relations.toString();
+        const populateFields: PopulateFieldsType = JSON.parse(populate);
+
+        populateFields.forEach(field => {
+            query = query.populate({
+                path: field.path,
+                select: field.select ? field.select.split(',').join(' ') : ''
+            });
+        });
+    }
+    return query;
 }
