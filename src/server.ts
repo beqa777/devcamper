@@ -1,10 +1,13 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
-import bootcamps from './routers/bootcamps';
 import { api, Color } from './globals';
 import morgan from 'morgan';
 import { connectDb } from '~/db';
 import { errorHandler } from '~/middlewares/errorHandler';
+
+// import routes
+import bootcamps from './routers/bootcamps';
+import courses from './routers/courses';
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -26,6 +29,7 @@ app.use(express.json());
 
 //routes
 app.use(`${api}/bootcamps`, bootcamps);
+app.use(`${api}/courses`, courses);
 
 //error handler
 app.use(errorHandler);

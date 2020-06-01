@@ -1,11 +1,15 @@
 import express from 'express';
 import BootcampsController from '~/controllers/bootcamps';
+import courseRouter from '~/routers/courses';
 import { asyncHandler } from '~/middlewares/async';
 
 
 const router = express.Router();
 const controller = new BootcampsController();
 
+
+//Re-route into other resource routers
+router.use('/:bootcampId/courses', courseRouter)
 
 router.get('/', asyncHandler(controller.all));
 
