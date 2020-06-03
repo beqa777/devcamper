@@ -50,9 +50,16 @@ class CourseController {
 
     /** create record */
     async post(req: Request, res: Response, next: NextFunction) {
+        req.body.user = req.user?.id;
+
         const bootcamp = await BootcampModel.findById(req.body.bootcamp);
         if (!bootcamp) {
-            return next(new ErrorResponse(`Bootcamp not found with id ${bootcamp}`, 404));
+            return next(new ErrorResponse(`Bootcamp not found with id ${req.body.bootcamp}`, 404));
+        }
+
+        // Make sure user is bootcamp owner
+        if (bootcamp.user.toString() !== req.user?.id && req.user?.role !== 'admin') {
+            return next(new ErrorResponse(`User ${req.user?.id} is not authorized to add a course to bootcamp ${bootcamp._id}`, 401));
         }
 
         const course = await CourseModel.create(req.body);
@@ -62,22 +69,21 @@ class CourseController {
     /** edit record */
     async put(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id;
-
-        if (req.body.bootcamp) {
-            const bootcamp = await BootcampModel.findById(req.body.bootcamp);
-            if (!bootcamp) {
-                return next(new ErrorResponse(`Bootcamp not found with id ${bootcamp}`, 404));
-            }
-        }
-
-        const course = await CourseModel.findByIdAndUpdate(id, req.body, {
-            new: true,
-            runValidators: true
-        });
+        let course = await CourseModel.findById(id, req.body);
 
         if (!course) {
             return next(new ErrorResponse(`Course not found with id ${id}`, 404));
         }
+
+        // Make sure user is bootcamp owner
+        if (course.user.toString() !== req.user?.id && req.user?.role !== 'admin') {
+            return next(new ErrorResponse(`User ${req.user?.id} is not authorized to update a course ${course._id}`, 401));
+        }
+
+        course = await CourseModel.findByIdAndUpdate(id, req.body, {
+            new: true,
+            runValidators: true
+        });
         res.status(200).json({ success: true, data: course });
     }
 
@@ -88,6 +94,11 @@ class CourseController {
         if (!course) {
             return next(new ErrorResponse(`course not found with id ${id}`, 404));
         }
+        // Make sure user is bootcamp owner
+        if (course.user.toString() !== req.user?.id && req.user?.role !== 'admin') {
+            return next(new ErrorResponse(`User ${req.user?.id} is not authorized to delete a course ${course._id}`, 401));
+        }
+
         course.remove();
         res.status(200).json({ success: true, msg: 'Course deleted successfully' });
     }

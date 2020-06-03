@@ -1,3 +1,4 @@
+import { ObjectID } from 'mongodb';
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
 import { geocoder } from '~/utils/geocoder';
@@ -28,7 +29,8 @@ interface BootcampType extends Document {
     jobAssistance: string,
     jobGuarantee: string,
     acceptGi: string,
-    createdAt: string
+    createdAt: string,
+    user: string
 }
 
 const BootcampSchema: Schema<BootcampType> = new Schema({
@@ -126,6 +128,11 @@ const BootcampSchema: Schema<BootcampType> = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    user: {
+        type: ObjectID,
+        ref: 'User',
+        required: true
     }
 }, {
     toJSON: { virtuals: true, },
@@ -174,4 +181,4 @@ BootcampSchema.virtual('courses', {
     justOne: false
 })
 
-export default mongoose.model('Bootcamp', BootcampSchema);
+export default mongoose.model<BootcampType>('Bootcamp', BootcampSchema);

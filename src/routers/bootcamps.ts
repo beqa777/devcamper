@@ -1,7 +1,7 @@
 import express from 'express';
 import BootcampsController from '~/controllers/bootcamps';
 import { asyncHandler } from '~/middlewares/async';
-import { protect } from '~/middlewares/auth';
+import { protect, authorize } from '~/middlewares/auth';
 import courseRouter from '~/routers/courses';
 
 
@@ -18,10 +18,10 @@ router.get(`/:id`, asyncHandler(controller.get))
 router.get(`/radius/:zipcode/:distance`, asyncHandler(controller.getBootcampInRadius));
 
 // Protected
-router.post('/', protect, asyncHandler(controller.post));
-router.put(`/:id`, protect, asyncHandler(controller.put));
-router.delete(`/:id`, protect, asyncHandler(controller.delete));
-router.put(`/:id/photo`, protect, asyncHandler(controller.bootcampPhotoUpload));
+router.post('/', protect, authorize('publisher', 'admin'), asyncHandler(controller.post));
+router.put(`/:id`, protect, authorize('publisher', 'admin'), asyncHandler(controller.put));
+router.delete(`/:id`, protect, authorize('publisher', 'admin'), asyncHandler(controller.delete));
+router.put(`/:id/photo`, protect, authorize('publisher', 'admin'), asyncHandler(controller.bootcampPhotoUpload));
 
 
 export default router;

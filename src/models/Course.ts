@@ -1,6 +1,5 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
 import { ObjectID } from 'mongodb';
-import { Color } from '~/globals';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 interface CourseType extends Document {
     title: string,
@@ -9,7 +8,8 @@ interface CourseType extends Document {
     tuition: number,
     minimumSkill: number,
     scholarshipAvailable: number,
-    createdAt: string
+    createdAt: string,
+    user: string
 }
 
 const CourseSchema = new Schema<CourseType>({
@@ -51,6 +51,11 @@ const CourseSchema = new Schema<CourseType>({
     bootcamp: {
         type: ObjectID,
         ref: 'Bootcamp',
+        required: true
+    },
+    user: {
+        type: ObjectID,
+        ref: 'User',
         required: true
     }
 });
@@ -99,4 +104,4 @@ CourseSchema.post('remove', async function (this: any) {
     await this.constructor.getAverageCost(this.bootcamp);
 })
 
-export default mongoose.model('Course', CourseSchema)
+export default mongoose.model<CourseType>('Course', CourseSchema)
