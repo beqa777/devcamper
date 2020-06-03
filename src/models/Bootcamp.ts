@@ -28,7 +28,7 @@ interface BootcampType extends Document {
     jobAssistance: string,
     jobGuarantee: string,
     acceptGi: string,
-    createdAt: Date
+    createdAt: string
 }
 
 const BootcampSchema: Schema<BootcampType> = new Schema({

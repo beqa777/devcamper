@@ -6,11 +6,12 @@ import { connectDb } from '~/db';
 import { errorHandler } from '~/middlewares/errorHandler';
 import fileupload from 'express-fileupload';
 import path from 'path';
-
+import cookieParser from 'cookie-parser';
 
 // import routes
 import bootcamps from './routers/bootcamps';
 import courses from './routers/courses';
+import auth from './routers/auth';
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -30,9 +31,10 @@ if (process.env.NODE_ENV === 'development') {
 // File upload
 app.use(fileupload());
 
-// Set static folder
-// console.log(Color.FgRed, path.resolve() + "/public");
+// Cookie parser
+app.use(cookieParser());
 
+// Set static folder
 app.use(express.static(path.resolve() + "/public"));
 
 
@@ -42,6 +44,7 @@ app.use(express.json());
 //routes
 app.use(`${api}/bootcamps`, bootcamps);
 app.use(`${api}/courses`, courses);
+app.use(`${api}/auth`, auth);
 
 //error handler
 app.use(errorHandler);
@@ -51,7 +54,7 @@ const server = app.listen(PORT, () => {
     console.log(Color.FgBlue, `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 });
 
-
+// Handle unhandled errors
 process.on('unhandledRejection', (err: Error | null, promise) => {
     console.log(Color.FgRed, `Error: ${err?.message}`);
     // Close server and exit process

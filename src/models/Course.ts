@@ -9,7 +9,7 @@ interface CourseType extends Document {
     tuition: number,
     minimumSkill: number,
     scholarshipAvailable: number,
-    createdAt: number
+    createdAt: string
 }
 
 const CourseSchema = new Schema<CourseType>({
