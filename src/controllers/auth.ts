@@ -11,6 +11,7 @@ class AuthController {
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
         this.resetPassword = this.resetPassword.bind(this);
+        this.updateUserPassword = this.updateUserPassword.bind(this);
     }
 
     /** register user */
@@ -60,6 +61,38 @@ class AuthController {
         const user = req.user;
         res.status(200).json({ success: true, data: user })
     }
+
+    /** update current user details */
+    async updateUserDetails(req: Request, res: Response, next: NextFunction) {
+
+        const { name, email } = req.body;
+        const user = await UserModel.findByIdAndUpdate(req.user?.id, { name, email }, {
+            new: true,
+            runValidators: true
+        });
+        res.status(200).json({ success: true, data: user })
+    }
+
+    /** update current user password */
+    async updateUserPassword(req: Request, res: Response, next: NextFunction) {
+        const { currentPassword, newPassword } = req.body;
+        const user = await UserModel.findById(req.user?.id).select('+password');
+
+        if (!user) {
+            return next(new ErrorResponse('User not found', 400));
+        }
+
+        // Check current password
+        if (!(await user?.marchPassword(currentPassword))) {
+            return next(new ErrorResponse('Password is incorrect', 401))
+        }
+
+        user.password = `${newPassword}`;
+        await user.save()
+
+        this.sendTokenResponse(res, user, 200)
+    }
+
 
     /** forgot password */
     async forgotPassword(req: Request, res: Response, next: NextFunction) {
