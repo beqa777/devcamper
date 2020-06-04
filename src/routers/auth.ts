@@ -14,6 +14,8 @@ const controller = new AuthController();
 // Public
 router.post('/register', asyncHandler(controller.register));
 router.post('/login', asyncHandler(controller.login));
+router.post('/forget', asyncHandler(controller.forgotPassword));
+router.put('/reset/:token', asyncHandler(controller.resetPassword));
 
 // Protected
 router.get('/current', protect, asyncHandler(controller.getCurrentUser))
