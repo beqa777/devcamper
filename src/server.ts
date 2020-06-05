@@ -1,19 +1,25 @@
-import express, { Express } from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import { api, Color } from './globals';
+import express, { Express } from 'express';
+import fileupload from 'express-fileupload';
+import sanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import { connectDb } from '~/db';
 import { errorHandler } from '~/middlewares/errorHandler';
-import fileupload from 'express-fileupload';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-
-// import routes
+import { api, Color } from './globals';
+import auth from './routers/auth';
 import bootcamps from './routers/bootcamps';
 import courses from './routers/courses';
-import auth from './routers/auth';
-import users from './routers/user';
 import reviews from './routers/reviews';
+import users from './routers/user';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -30,8 +36,44 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // File upload
 app.use(fileupload());
+
+
+// Set security headers
+app.use(helmet())
+
+// Prevent XSS 
+app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minute
+    max: 100, // request,
+    handler: function (req, res, next) {
+        // FoalTS Headers
+        res.setHeader('Content-Type', 'application/json');
+        // Send this response for rate limited requests
+        res.status(this.statusCode!).send({
+            success: false,
+            msg: 'Too many requests, please try again later.'
+        });
+    }
+})
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp())
+
+// Enable CORS
+app.use(cors());
+
+// Sanitize data
+app.use(sanitize());
 
 // Cookie parser
 app.use(cookieParser());

@@ -19,6 +19,7 @@ router.put('/reset/:token', asyncHandler(controller.resetPassword));
 
 // Protected
 router.get('/current', protect, asyncHandler(controller.getCurrentUser))
+router.get('/logout', protect, asyncHandler(controller.logOut))
 router.put('/updateDetails', protect, asyncHandler(controller.updateUserDetails))
 router.put('/updatePassword', protect, asyncHandler(controller.updateUserPassword))
 

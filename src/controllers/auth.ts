@@ -31,7 +31,7 @@ class AuthController {
     }
 
     /** login */
-    async login(req: Request, res: Response, next: NextFunction) {
+    async login(req: Request, res: Response, next: NextFunction) {        
         const { password, email } = req.body;
 
         // Validate email and password
@@ -41,7 +41,7 @@ class AuthController {
 
         // Check for user
         const user = await UserModel.findOne({ email }).select('+password');
-
+        
         if (!user) {
             return next(new ErrorResponse('Email not found', 401));
         }
@@ -157,6 +157,14 @@ class AuthController {
         this.sendTokenResponse(res, user, 200);
     }
 
+    /** log out user */
+    async logOut(req: Request, res: Response, next: NextFunction) {
+        res.cookie('token', 'none', {
+            expires: new Date(Date.now() + 10 * 1000),
+            httpOnly: true
+        })
+        res.status(200).json({ success: true })
+    }
 
     async sendTokenResponse(res: Response, user: UserSchemaType, statusCode: number) {
         // Create token
