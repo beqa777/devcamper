@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { Color } from '~/globals';
+import { Color } from '../globals';
 
 type SendEmailType = {
     email: string,

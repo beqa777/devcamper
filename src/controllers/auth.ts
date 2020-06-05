@@ -1,8 +1,8 @@
-import UserModel, { UserSchemaType } from '~/models/User';
-import { ErrorResponse } from "~/utils/errorResponse";
+import UserModel, { UserSchemaType } from '../models/User';
+import { ErrorResponse } from "../utils/errorResponse";
 import { NextFunction, Request, Response } from "../types";
-import { sendEmail } from '~/utils/sendEmail';
-import { api } from '~/globals';
+import { sendEmail } from '../utils/sendEmail';
+import { api } from '../globals';
 import crypto from 'crypto';
 
 class AuthController {

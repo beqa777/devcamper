@@ -1,9 +1,9 @@
 import express from 'express';
-import BootcampsController from '~/controllers/bootcamps';
-import { asyncHandler } from '~/middlewares/async';
-import { protect, authorize } from '~/middlewares/auth';
-import courseRouter from '~/routers/courses';
-import reviewRouter from '~/routers/reviews';
+import BootcampsController from '../controllers/bootcamps';
+import { asyncHandler } from '../middlewares/async';
+import { protect, authorize } from '../middlewares/auth';
+import courseRouter from '../routers/courses';
+import reviewRouter from '../routers/reviews';
 
 
 const router = express.Router();

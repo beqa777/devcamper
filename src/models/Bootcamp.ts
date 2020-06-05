@@ -1,7 +1,7 @@
 import { ObjectID } from 'mongodb';
 import mongoose, { Schema, Document } from 'mongoose';
 import slugify from 'slugify';
-import { geocoder } from '~/utils/geocoder';
+import { geocoder } from '../utils/geocoder';
 
 interface BootcampType extends Document {
     name: string,

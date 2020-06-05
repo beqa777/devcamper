@@ -1,14 +1,14 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Color = require('~/globals').Color;
+const Color = require('../globals').Color;
 
 dotenv.config({ path: './config/config.env' });
 
-const Bootcamp = require('~/models/Bootcamp').default;
-const Course = require('~/models/Course').default;
-const User = require('~/models/User').default;
-const Review = require('~/models/Review').default;
+const Bootcamp = require('../models/Bootcamp').default;
+const Course = require('../models/Course').default;
+const User = require('../models/User').default;
+const Review = require('../models/Review').default;
 
 mongoose.connect(process.env.MONGO_URL || '', {
     useNewUrlParser: true,

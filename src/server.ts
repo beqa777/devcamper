@@ -5,10 +5,9 @@ import express, { Express } from 'express';
 import fileupload from 'express-fileupload';
 import sanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
-import morgan from 'morgan';
 import path from 'path';
-import { connectDb } from '~/db';
-import { errorHandler } from '~/middlewares/errorHandler';
+import { connectDb } from './db';
+import { errorHandler } from './middlewares/errorHandler';
 import { api, Color } from './globals';
 import auth from './routers/auth';
 import bootcamps from './routers/bootcamps';
@@ -33,7 +32,7 @@ const app: Express = express();
 
 //dev log middleware
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+    // app.use(morgan('dev'));
 }
 
 

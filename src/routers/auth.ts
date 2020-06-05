@@ -1,8 +1,8 @@
 import express from 'express';
-import AuthController from '~/controllers/auth';
-import courseRouter from '~/routers/courses';
-import { asyncHandler } from '~/middlewares/async';
-import { protect } from '~/middlewares/auth';
+import AuthController from '../controllers/auth';
+import courseRouter from '../routers/courses';
+import { asyncHandler } from '../middlewares/async';
+import { protect } from '../middlewares/auth';
 
 
 const router = express.Router();

@@ -1,7 +1,7 @@
-import ReviewModel from '~/models/Review';
-import BootcampModel from '~/models/Bootcamp';
-import { ErrorResponse } from "~/utils/errorResponse";
-import { paginate, queryGenerator, relationsGenerator } from "~/utils/query";
+import ReviewModel from '../models/Review';
+import BootcampModel from '../models/Bootcamp';
+import { ErrorResponse } from "../utils/errorResponse";
+import { paginate, queryGenerator, relationsGenerator } from "../utils/query";
 import { NextFunction, Request, Response } from "../types";
 
 class ReviewController {

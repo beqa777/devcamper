@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { ErrorResponse } from '~/utils/errorResponse';
-import { asyncHandler } from '~/middlewares/async';
-import UserModel from '~/models/User';
-import { NextFunction, Request, Response } from '~/types';
-import { Color } from '~/globals';
+import { ErrorResponse } from '../utils/errorResponse';
+import { asyncHandler } from '../middlewares/async';
+import UserModel from '../models/User';
+import { NextFunction, Request, Response } from '../types';
+import { Color } from '../globals';
 
 // Protect route
 export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

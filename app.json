@@ -1,0 +1,7 @@
+{
+  "name": "Start on Heroku: Node.js",
+  "description": "DevCamper API",
+  "repository": "https://github.com/beqa777/devcamper",
+  "keywords": ["node", "express", "heroku"],
+  "image": "heroku/nodejs"
+}

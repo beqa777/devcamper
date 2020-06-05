@@ -1,7 +1,7 @@
 import express from 'express';
-import CourseController from '~/controllers/courses';
-import { asyncHandler } from '~/middlewares/async';
-import { protect, authorize } from '~/middlewares/auth';
+import CourseController from '../controllers/courses';
+import { asyncHandler } from '../middlewares/async';
+import { protect, authorize } from '../middlewares/auth';
 
 const router = express.Router({ mergeParams: true });
 const controller = new CourseController();

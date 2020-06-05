@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Color } from '~/globals';
+import { Color } from './globals';
 
 export const connectDb = async () => {
     try {

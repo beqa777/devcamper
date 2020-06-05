@@ -1,6 +1,6 @@
-import { Request } from "~/types";
+import { Request } from "../types";
 import { Model, DocumentQuery } from "mongoose";
-import { Color } from "~/globals";
+import { Color } from "../globals";
 
 type QueryGeneratorParams = {
     req: Request,

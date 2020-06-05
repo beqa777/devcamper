@@ -1,7 +1,7 @@
-import BootcampModel from '~/models/Bootcamp';
-import { ErrorResponse } from "~/utils/errorResponse";
-import { geocoder } from '~/utils/geocoder';
-import { paginate, queryGenerator, relationsGenerator } from "~/utils/query";
+import BootcampModel from '../models/Bootcamp';
+import { ErrorResponse } from "../utils/errorResponse";
+import { geocoder } from '../utils/geocoder';
+import { paginate, queryGenerator, relationsGenerator } from "../utils/query";
 import { NextFunction, Request, Response } from "../types";
 import path from 'path';
 import fileUpload from 'express-fileupload';

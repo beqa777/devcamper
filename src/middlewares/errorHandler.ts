@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "~/types";
-import { Color } from "~/globals";
-import { ErrorResponseType, ErrorResponse } from "~/utils/errorResponse";
+import { Request, Response, NextFunction } from "../types";
+import { Color } from "../globals";
+import { ErrorResponseType, ErrorResponse } from "../utils/errorResponse";
 
 export const errorHandler = (err: ErrorResponseType, req: Request, res: Response, next: NextFunction) => {
 

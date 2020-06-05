@@ -1,6 +1,6 @@
-import UserModel from '~/models/User';
-import { ErrorResponse } from "~/utils/errorResponse";
-import { paginate, queryGenerator, relationsGenerator } from "~/utils/query";
+import UserModel from '../models/User';
+import { ErrorResponse } from "../utils/errorResponse";
+import { paginate, queryGenerator, relationsGenerator } from "../utils/query";
 import { NextFunction, Request, Response } from "../types";
 
 class UserController {

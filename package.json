@@ -4,12 +4,12 @@
   "description": "dev camper api",
   "main": "dist/server.js",
   "scripts": {
-    "start": " SET NODE_ENV=production & node ./dist/server.js",
+    "start": "node ./dist/server.js",
     "dev": "tsc-watch --project . --outDir ./dist --onSuccess \"nodemon ./dist/server.js\"",
-    "preinstall": "link-module-alias",
     "deleteAndImport": "node seeder -r",
     "import-data": "node seeder -i",
-    "delete-data": "node seeder -d"
+    "delete-data": "node seeder -d",
+    "postinstall": "tsc --project . --outDir ./dist"
   },
   "repository": {
     "type": "git",
@@ -54,13 +54,7 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
-    "@types/morgan": "^1.9.0",
-    "link-module-alias": "^1.2.0",
-    "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "tsc-watch": "^4.2.8"
-  },
-  "_moduleAliases": {
-    "~": "dist"
   }
 }
