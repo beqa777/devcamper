@@ -3,6 +3,7 @@ import BootcampsController from '~/controllers/bootcamps';
 import { asyncHandler } from '~/middlewares/async';
 import { protect, authorize } from '~/middlewares/auth';
 import courseRouter from '~/routers/courses';
+import reviewRouter from '~/routers/reviews';
 
 
 const router = express.Router();
@@ -10,11 +11,12 @@ const controller = new BootcampsController();
 
 
 //Re-route into other resource routers
-router.use('/:bootcampId/courses', courseRouter)
+router.use('/:bootcampId/courses', courseRouter);
+router.use('/:bootcampId/reviews', reviewRouter);
 
 // Public
 router.get('/', asyncHandler(controller.all));
-router.get(`/:id`, asyncHandler(controller.get))
+router.get(`/:id`, asyncHandler(controller.get));
 router.get(`/radius/:zipcode/:distance`, asyncHandler(controller.getBootcampInRadius));
 
 // Protected

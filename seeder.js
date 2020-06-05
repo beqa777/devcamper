@@ -8,6 +8,7 @@ dotenv.config({ path: './config/config.env' });
 const Bootcamp = require('~/models/Bootcamp').default;
 const Course = require('~/models/Course').default;
 const User = require('~/models/User').default;
+const Review = require('~/models/Review').default;
 
 mongoose.connect(process.env.MONGO_URL || '', {
     useNewUrlParser: true,
@@ -28,6 +29,10 @@ const users = JSON.parse(
     fs.readFileSync(`${__dirname}/_data/users.json`, 'utf-8')
 );
 
+const reviews = JSON.parse(
+    fs.readFileSync(`${__dirname}/_data/reviews.json`, 'utf-8')
+);
+
 
 // Import data into database
 const importData = async () => {
@@ -35,9 +40,11 @@ const importData = async () => {
         await Bootcamp.create(bootcamps);
         await Course.create(courses);
         await User.create(users);
+        await Review.create(reviews);
         console.log(Color.FgGreen, 'Bootcamps imported into database.');
         console.log(Color.FgGreen, 'Courses imported into database.');
         console.log(Color.FgGreen, 'Users imported into database.');
+        console.log(Color.FgGreen, 'Reviews imported into database.');
     } catch (error) {
         console.log(Color.FgRed, error);
     } finally {
@@ -51,9 +58,11 @@ const deleteData = async (fn) => {
         await Bootcamp.deleteMany({});
         await Course.deleteMany({});
         await User.deleteMany({});
+        await Review.deleteMany({});
         console.log(Color.FgGreen, 'Bootcamps deleted.');
         console.log(Color.FgGreen, 'Courses deleted.');
         console.log(Color.FgGreen, 'Users deleted.');
+        console.log(Color.FgGreen, 'Reviews deleted.');
         if(fn){
             await fn()
         }

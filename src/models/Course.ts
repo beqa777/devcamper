@@ -61,7 +61,7 @@ const CourseSchema = new Schema<CourseType>({
 });
 
 
-// Static method to get avg od tuitions
+// Static method to get avg of tuitions
 CourseSchema.static('getAverageCost', async function (this: Model<Document, {}>, bootcampId: string) {
     const obj = await this.aggregate([
         {

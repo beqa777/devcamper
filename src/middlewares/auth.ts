@@ -28,8 +28,10 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
         const decoded: any = jwt.verify(token, `${process.env.JWT_SECRET}`);
         if (typeof decoded !== 'string' && decoded.hasOwnProperty('id')) {
             req.user = await UserModel.findById(decoded.id);
-        } else {
-            throw new Error();
+        }
+
+        if (!req.user) {
+            return next(new ErrorResponse('Incorrect authentication header, User not found', 400));
         }
 
         next();

@@ -103,5 +103,12 @@
 		"email": "sara@gmail.com",
 		"role": "user",
 		"password": "123456"
+	},
+	{
+		"_id": "5ed9d18ccc34bf26309b71ab",
+		"name": "beqa",
+		"email": "beqasirbila@gmail.com",
+		"role": "publisher",
+		"password": "password"
 	}
 ]

@@ -13,6 +13,7 @@ import bootcamps from './routers/bootcamps';
 import courses from './routers/courses';
 import auth from './routers/auth';
 import users from './routers/user';
+import reviews from './routers/reviews';
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -47,6 +48,7 @@ app.use(`${api}/bootcamps`, bootcamps);
 app.use(`${api}/courses`, courses);
 app.use(`${api}/auth`, auth);
 app.use(`${api}/users`, users);
+app.use(`${api}/reviews`, reviews);
 
 //error handler
 app.use(errorHandler);
