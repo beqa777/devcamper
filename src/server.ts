@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 import bootcamps from './routers/bootcamps';
 import courses from './routers/courses';
 import auth from './routers/auth';
+import users from './routers/user';
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -45,6 +46,7 @@ app.use(express.json());
 app.use(`${api}/bootcamps`, bootcamps);
 app.use(`${api}/courses`, courses);
 app.use(`${api}/auth`, auth);
+app.use(`${api}/users`, users);
 
 //error handler
 app.use(errorHandler);
